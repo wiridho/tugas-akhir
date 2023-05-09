@@ -1,64 +1,50 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import Background from "../../assets/background.png";
+import { Label, TextInput, Button, Select } from "flowbite-react";
 import { handleRegister } from "../../features/auth/authSlice";
-import registerImg from "../../assets/authImg.png";
-import { TextInput, Label, Button } from "flowbite-react";
-import group23 from "../../assets/Group 234.png";
-
-const Register = () => {
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { toTitleCase } from "../../utils/Format";
+const Register4 = () => {
+  const { roles } = useParams();
+  console.log("roles", roles);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const [data, setData] = useState({
-  //   email: "",
-  //   name: "",
-  //   roles: "",
-  //   password: "",
-  //   phoneNumber: "",
-  // });
-
-  // const handleChange = (event) => {
-  //   let value = event.target.value;
-  //   let name = event.target.name;
-  //   setData({ ...data, [name]: value });
-  // };
 
   const onSubmit = (data) => {
-    console.log("Register", data);
+    data["roles"] = roles;
+    console.log("register", data);
     dispatch(handleRegister(data));
     navigate("/verifyregister");
   };
-
   // calling useForm
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   return (
     <>
-      <div className="fixed inset-0 flex  ">
-        <div className="bg-white-600 grow "></div>
-        <div className=" w-[455px]">
-          <img src={group23} alt="" />
-        </div>
-      </div>
-      <div className="min-h-screen">
-        <div className="relative ">
-          <div className="flex mx-auto justify-center items-center max-w-[1220px]">
-            {/* Register */}
-            <div className="w-[454px]">
-              <form
-                className="bg-white border shadow-md rounded px-7 pt-8 pb-8 "
-                onSubmit={handleSubmit(onSubmit)}
-              >
-                <div>
-                  <h1 className="text-2xl font-semibold mb-3 ">
-                    Register Page
-                  </h1>
-                </div>
+      <div>
+        {/* Background */}
+        <div
+          className="fixed inset-0"
+          style={{ backgroundImage: `url(${Background})` }}
+        ></div>
+        {/* Content */}
+        <div className="relative">
+          <div className="flex justify-center items-center h-screen">
+            <div className="block max-w-sm lg:w-1/3 px-8 py-6 bg-white  border-gray-200 rounded-lg">
+              <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-90">
+                LOGO
+              </h5>
+              <p className="font-normal text-2xl text-gray-70">
+                Daftar sebagai {toTitleCase(roles)}
+              </p>
+
+              <form className="" onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-2">
                   <Label
                     className="block text-gray-700 text-sm font-medium mb-1"
@@ -67,6 +53,7 @@ const Register = () => {
                   />
                   <TextInput
                     type={"text"}
+                    placeholder="you@example.com"
                     {...register("email", {
                       required: true,
                       pattern: /^\S+@\S+$/i,
@@ -87,6 +74,7 @@ const Register = () => {
                   />
                   <TextInput
                     type={"text"}
+                    placeholder="Masukkan Nama"
                     {...register("name", {
                       required: true,
                       maxLength: 20,
@@ -96,7 +84,7 @@ const Register = () => {
                     <p className="text-red text-xs">This field is required</p>
                   )}
                 </div>
-                <div className="mb-2">
+                {/* <div className="mb-2">
                   <Label
                     className="block text-gray-700 text-sm font-medium mb-1"
                     htmlFor="roles"
@@ -111,7 +99,7 @@ const Register = () => {
                   {errors.roles?.type === "required" && (
                     <p className="text-red text-xs">This field is required</p>
                   )}
-                </div>
+                </div> */}
                 <div className="mb-2">
                   <Label
                     className="block text-gray-700 text-sm font-medium mb-1"
@@ -121,6 +109,7 @@ const Register = () => {
 
                   <TextInput
                     type={"password"}
+                    placeholder="Masukkan Password"
                     {...register("password", {
                       required: true,
                       maxLength: 20,
@@ -147,11 +136,13 @@ const Register = () => {
                 <div className="mb-2">
                   <Label
                     className="block text-gray-700 text-sm font-medium mb-1"
-                    htmlFor="Password"
+                    htmlFor="phone number"
                     value="Phone Number"
                   />
+
                   <TextInput
                     type={"number"}
+                    placeholder="Masukkan nomor handphone"
                     {...register("phoneNumber", {
                       required: "This field is required",
                     })}
@@ -160,18 +151,27 @@ const Register = () => {
                     <p className="text-red text-xs">This field is required</p>
                   )}
                 </div>
-                <Button type="submit" className="w-full">
-                  Submit
+                <Button type="submit" className="w-full" color={"purple"}>
+                  Daftar
                 </Button>
+                <div className="flex justify-between">
+                  <div className="flex items-center">
+                    <p className="pr-1 text-xs text-right text-grey">
+                      Sudah punya akun?
+                    </p>
+                    <Link
+                      className="text-xs text-blue-700 hover:text-blue-800"
+                      to="/login"
+                    >
+                      Masuk
+                    </Link>
+                  </div>
+                  <p className="p-2 text-xs text-right text-grey hover:text-gray-700">
+                    <Link to="/reset-password">Lupa Password?</Link>
+                  </p>
+                </div>
               </form>
             </div>
-            {/* End Register */}
-
-            {/* Image */}
-            <div className="h-[465px] w-[409px] ml-6">
-              <img src={registerImg} alt="" />
-            </div>
-            {/* End Image */}
           </div>
         </div>
       </div>
@@ -179,4 +179,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Register4;

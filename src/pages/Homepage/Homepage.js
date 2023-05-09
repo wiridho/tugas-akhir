@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../../features/auth/authSlice";
+import { Button } from "flowbite-react";
 
 const Homepage = () => {
   const navigate = useNavigate();
@@ -17,14 +18,14 @@ const Homepage = () => {
   };
 
   return (
-    <div>
-      <h1>INI HOMEPAGE</h1>
-      <br />
-      <br />
-      <button onClick={handleLogout} className="border bg-red-600 text-white">
-        LOGOUT
-      </button>
-    </div>
+    <>
+      <div className="mt-2 mx-2 flex justify-center items-center">
+        <h1>INI HOMEPAGE</h1>
+        <Button type="submit" onClick={handleLogout}>
+          Logout
+        </Button>
+      </div>
+    </>
   );
 };
 

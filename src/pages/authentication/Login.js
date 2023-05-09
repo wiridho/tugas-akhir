@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { handleLogin } from "../../features/auth/authSlice";
-import loginImg from "../../assets/authImg.png";
 import { TextInput, Label, Button } from "flowbite-react";
+
+import Background from "../../assets/background.png";
 
 //icon
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
@@ -15,6 +16,7 @@ const TogglePassword = () => {
   function togglePasswordVisibility() {
     setIsPasswordVisible(true);
   }
+
   return (
     <div onClick={() => togglePasswordVisibility()}>
       {isPasswordVisible ? (
@@ -32,21 +34,10 @@ const Login = () => {
   //navigate
   const navigate = useNavigate();
 
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (event) => {
-    const value = event.target.value;
-    const name = event.target.name;
-    setData({ ...data, [name]: value });
-  };
-
   const onSubmit = (data) => {
     console.log("Login", data);
-    // dispatch(handleLogin(data));
-    // navigate("/verifylogin");
+    dispatch(handleLogin(data));
+    navigate("/verifylogin");
   };
 
   // calling useForm
@@ -59,79 +50,107 @@ const Login = () => {
 
   return (
     <>
-      <div className="px-20 py-2">
-        <h1 className="text-3xl text-blue-700 font-bold">LOGO</h1>
-      </div>
-      <div className="flex mx-auto justify-between max-w-[1220px]">
-        {/* Register */}
-        <div className="w-[454px]">
-          <form
-            className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <div>
-              <h1 className="text-3xl font-medium mb-3 ">Login Page</h1>
-            </div>
-            <div className="mb-4">
-              <Label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="email"
-                value="Email Address"
-              />
-              <TextInput
-                type={"text"}
-                {...register("email", {
-                  required: true,
-                  pattern: /^\S+@\S+$/i,
-                })}
-              />
-              {errors.email?.type === "required" && (
-                <p className="text-red text-xs">This field is required</p>
-              )}
-              {errors.email?.type === "pattern" && (
-                <p className="text-red text-xs">Invalid email address</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <Label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="Password"
-                value="Password"
-              />
+      <div>
+        {/* Background */}
+        <div
+          className="fixed inset-0"
+          style={{ backgroundImage: `url(${Background})` }}
+        ></div>
+        {/* Content */}
+        <div className="relative">
+          <div className="flex justify-center items-center h-screen">
+            <div
+              class="block max-w-sm md:w-1/3
+             px-8 py-6 bg-white border-gray-200 rounded-lg"
+            >
+              <h5 class="text-2xl font-bold tracking-tight text-gray-90">
+                LOGO
+              </h5>
+              <p class="text-2xl text-[#333333] py-5 font-bold">
+                Welcome back!
+              </p>
 
-              {/* Password */}
-              <div>
-                <TextInput
-                  // type={isPasswordVisible ? "text" : "password"}
-                  {...register("password", {
-                    required: true,
-                    maxLength: 20,
-                  })}
-                  // onClick={togglePasswordVisibility}
-                  rightIcon={TogglePassword}
-                />
-                {errors.password?.type === "required" && (
-                  <p className="text-red text-xs">This field is required</p>
-                )}
-                {errors.password && errors.password.type === "maxLength" && (
-                  <p className="text-red text-xs">
-                    Password cannot be more than 20 characters long
+              <form className="" onSubmit={handleSubmit(onSubmit)}>
+                <div className="py-[10px]">
+                  <Label
+                    className="block text-[#828282] text-sm font-medium mb-[10px]"
+                    htmlFor="email"
+                    value="Email Address"
+                  />
+                  <TextInput
+                    type={"text"}
+                    placeholder="you@example.com"
+                    {...register("email", {
+                      required: true,
+                      pattern: /^\S+@\S+$/i,
+                    })}
+                  />
+                  {errors.email?.type === "required" && (
+                    <p className="text-red text-xs">This field is required</p>
+                  )}
+                  {errors.email?.type === "pattern" && (
+                    <p className="text-red text-xs">Invalid email address</p>
+                  )}
+                </div>
+
+                <div className="py-[10px]">
+                  <Label
+                    className="block text-[#828282] text-sm font-medium mb-[10px]"
+                    htmlFor="Password"
+                    value="Password"
+                  />
+
+                  <TextInput
+                    type={"password"}
+                    placeholder="enter 8 character or more"
+                    {...register("password", {
+                      required: true,
+                      maxLength: 20,
+                      pattern:
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                    })}
+                    rightIcon={TogglePassword}
+                    // onClick={() => togglePasswordVisibility}
+                  />
+                  {errors.password?.type === "required" && (
+                    <p className="text-red text-xs">This field is required</p>
+                  )}
+                  {errors.password && errors.password.type === "maxLength" && (
+                    <p className="text-red text-xs">
+                      Password cannot be more than 20 characters long
+                    </p>
+                  )}
+                  {errors.password && errors.password.type === "pattern" && (
+                    <p className="text-red text-xs">
+                      "Password must be 8 characters long, contain at least one
+                      uppercase letter, one lowercase letter, and one special
+                      character"
+                    </p>
+                  )}
+                </div>
+                <Button type="submit" className="w-full mt-2" color={"purple"}>
+                  Submit
+                </Button>
+                <div className="flex justify-between">
+                  <div className="flex items-center">
+                    <p className="pr-1 text-xs text-right text-grey">
+                      Need an account?
+                    </p>
+                    <Link
+                      className="text-xs text-blue-700 hover:text-blue-800"
+                      to="/register"
+                    >
+                      Register
+                    </Link>
+                  </div>
+                  <p className="p-2 text-xs text-right text-grey hover:text-gray-700">
+                    <Link to="/reset-password">Forgot Password?</Link>
                   </p>
-                )}
-              </div>
-              {/* End Password */}
+                </div>
+              </form>
             </div>
-            <Button type="submit" className="w-full">
-              Submit
-            </Button>
-          </form>
+          </div>
         </div>
-        {/* End Register */}
-        {/* Image */}
-        <div className="h-[739px] w-[653px]">
-          <img src={loginImg} alt="" />
-        </div>
-        {/* End Image */}
       </div>
     </>
   );

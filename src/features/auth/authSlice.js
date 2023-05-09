@@ -32,10 +32,10 @@ export const verifyRegisterOtp = createAsyncThunk(
   async (otp) => {
     try {
       const userId = JSON.parse(localStorage.getItem("userId"));
-      console.log("userid", userId);
+      console.log(otp);
       const response = await axios.post(
         `${apiConfig.baseUrl}/authentication/otp/email/verify`,
-        { otp, userId }
+        { otp: otp, userId: userId }
       );
       console.log(response);
     } catch (err) {
