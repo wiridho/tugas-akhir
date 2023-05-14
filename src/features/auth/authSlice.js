@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import apiConfig from "../../api/apiConfig";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import apiConfig from '../../api/apiConfig';
 
 const initialState = {
   isSuccess: false,
@@ -87,32 +87,32 @@ export const handleLogin = createAsyncThunk(
 
 // Handle Login OTP
 export const verifyLoginOtp = createAsyncThunk(
-  "auth/verifyLoginOtp",
-  async (params) => {
-    try {
-      console.log("params", params);
-      const response = await axios.post(
-        `${apiConfig.baseUrl}/authentication/login?action=login`,
-        params
-      );
+    'auth/verifyLoginOtp',
+    async (params) => {
+        try {
+            console.log('params', params);
+            const response = await axios.post(
+                `${apiConfig.baseUrl}/authentication/login?action=login`,
+                params,
+            );
 
-      localStorage.setItem("token", JSON.stringify(response.data.data));
-      return response?.data.data;
-      // let accessTokens = response.data.data.accessToken;
-      // let refreshTokens = response.data.data.refreshToken;
-      // const accessToken = localStorage.setItem(
-      //   "accessToken",
-      //   JSON.stringify(accessTokens)
-      // );
-      // const refreshToken = localStorage.setItem(
-      //   "accessToken",
-      //   JSON.stringify(refreshTokens)
-      // );
-      // return response.data.data;
-    } catch (err) {
-      console.log(err);
-    }
-  }
+            localStorage.setItem('token', JSON.stringify(response.data.data));
+            return response?.data.data;
+            // let accessTokens = response.data.data.accessToken;
+            // let refreshTokens = response.data.data.refreshToken;
+            // const accessToken = localStorage.setItem(
+            //   "accessToken",
+            //   JSON.stringify(accessTokens)
+            // );
+            // const refreshToken = localStorage.setItem(
+            //   "accessToken",
+            //   JSON.stringify(refreshTokens)
+            // );
+            // return response.data.data;
+        } catch (err) {
+            console.log(err);
+        }
+    },
 );
 
 // Handle Resend Login OTP
@@ -165,6 +165,20 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.hasError = true;
     },
+    extraReducers: {
+        // Register
+        [handleRegister.pending]: (state) => {
+            state.isLoading = true;
+            state.hasError = false;
+        },
+        [handleRegister.fulfilled]: (state, { payload }) => {
+            state.isLoading = false;
+            state.hasError = false;
+        },
+        [handleRegister.rejected]: (state) => {
+            state.isLoading = false;
+            state.hasError = true;
+        },
 
     // Verify Register OTP
     [verifyRegisterOtp.pending]: (state) => {

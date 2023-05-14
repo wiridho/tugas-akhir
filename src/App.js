@@ -7,16 +7,25 @@ import VerifyRegister from "./pages/authentication/VerifyRegister";
 import VerifyLogin from "./pages/authentication/VerifyLogin";
 import Homepage from "./pages/Homepage/Homepage";
 import ForgotPassword from "./pages/authentication/ForgotPassword";
+import VerifyEmail from "./pages/authentication/VerifyEmail";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Homepage />} />
+
+        {/* VERIFY EMAIL ACCOUNT FROM EMAIL LINK */}
+        <Route
+          path="/authentication/verification/email/:userId/:token"
+          element={<VerifyEmail />}
+        />
+        {/* END */}
+
         <Route path="/register" element={<RegisterRoles />} />
-        <Route path="/register/:roles" element={<Register />} />
-        <Route path="/verifyregister" element={<VerifyRegister />} />
+        <Route path="register/:roles" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/verifyregister" element={<VerifyRegister />} />
         <Route path="/verifylogin" element={<VerifyLogin />} />
         <Route path="/reset-password" element={<ForgotPassword />} />
       </Routes>
