@@ -13,13 +13,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Homepage />} />
-
-        <Route path="/register">
-          <Route index element={<RegisterRoles />} />
-          <Route path=":roles" element={<Register />} />
-        </Route>
-        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<RegisterRoles />} />
+        <Route path="/register/:roles" element={<Register />} />
         <Route path="/verifyregister" element={<VerifyRegister />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/verifylogin" element={<VerifyLogin />} />
         <Route path="/reset-password" element={<ForgotPassword />} />
       </Routes>

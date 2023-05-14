@@ -2,14 +2,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Lender from "../../assets/lender2.png";
 import Borrower from "../../assets/borrower2.png";
+import LogoAmana from "../../assets/img/logo/LogoAmana2.svg";
 
 const Register2 = () => {
   return (
-    <div className="relative font-sans md:min-h-screen bg-slate-100 ">
-      <div className="container mx-auto p-4 md:p-1">
+    <div className="relative md:min-h-screen bg-slate-100 font-inter ">
+      <div className="container mx-auto p-4">
         {/* Header */}
-        <div className=" text-center pt-5">
-          <h1 className="text-3xl font-semibold mb-3 text-[#013c50]">LOGO</h1>
+        <div className="flex justify-center items-center">
+          <img
+            src={LogoAmana}
+            className="w-20 h-20  p-2 rounded-full bg-primary"
+            alt="LogoAmana"
+          />
+        </div>
+        <div className="text-center pt-5">
           <p className="text-3xl text-[#013c50]">
             Cara Syariah yang Aman.
             <br />
@@ -31,12 +38,12 @@ const Register2 = () => {
               <Link
                 to={{
                   pathname: "/register/lender",
-                  roles: "lender",
+                  // roles: "lender",
                 }}
               >
                 <img src={Lender} className="" alt="Lender_img" />
-                <h1 className="text-lg text-[#33658A]">Pemberi Dana</h1>
-                <p className="text-[#8b959e] md:text-xs">
+                <h1 className="text-lg text-primary">Pemberi Dana</h1>
+                <p className="text-slate-500 md:text-xs">
                   Gabung sebagai <br /> pemberi Pembiayaan
                 </p>
               </Link>
@@ -45,64 +52,64 @@ const Register2 = () => {
               <Link
                 to={{
                   pathname: "/register/borrower",
-                  roles: "borrower",
+                  // roles: "borrower",
                 }}
               >
                 <img src={Borrower} className="" alt="Lender_img" />
-                <h1 className="text-lg text-[#33658A] ">Penerima Dana</h1>
-                <p className="text-[#8b959e] md:text-xs">
+                <h1 className="text-lg text-primary ">Penerima Dana</h1>
+                <p className="text-slate-500 md:text-xs">
                   Gabung sebagai <br /> pemerima Pembiayaan
                 </p>
               </Link>
             </div>
           </div>
           <div>
-            <p className="text-[#9cb3c4] text-xs mt-3">
+            <p className="text-secondary text-base mt-3">
               Sudah memiliki akun?{" "}
-              <Link to="#">
-                <span className="text-[#007BFF] hover:text-[#3495fccc]">
+              <Link to="/login">
+                <span className="text-primary hover:text-[#155596cc]">
                   {" "}
                   Masuk
                 </span>
               </Link>
             </p>
           </div>
+          <div className="">
+            <p className="text-slate-500">
+              Amanah telah{" "}
+              <span className="font-bold">Berizin dan Diawasi </span> oleh{" "}
+              <span className="">Otoritas Jasa Keuangan (OJK) </span>
+            </p>
+          </div>
         </div>
         {/* End Content */}
 
         {/* Footer */}
-        <div className=" text-center text-sm md:container md:mx-auto md:absolute md:left-0 md:right-0 md:bottom-0">
-          <footer className="">
-            <div className="w-full mx-auto p-4 md:flex md:items-center md:justify-between">
-              <span className="text-sm text-gray-500 sm:text-center sm:flex sm:flex-row md:flex">
-                <Link to="#">P2P LENDING SHARIA 2023™. </Link>
-                <p> All Rights Reserved</p>
-              </span>
-              <ul className="flex flex-wrap items-center justify-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0 text-center">
-                <li>
-                  <Link to={"#"} className="mr-4 hover:underline md:mr-6 ">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link to={"#"} className="mr-4 hover:underline md:mr-6">
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link to={"#"} className="mr-4 hover:underline md:mr-6">
-                    Licensing
-                  </Link>
-                </li>
-                <li>
-                  <Link to={"#"} className="hover:underline">
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </footer>
-        </div>
+        <footer className="">
+          <div className="w-full mx-auto max-w-screen-lg p-4 md:flex md:items-center md:justify-between text-[#113D52]">
+            <span className="text-sm  sm:text-center">
+              © AMANAH Fintech Syariah 2023 . All Rights Reserved.
+            </span>
+            <ul className="flex flex-wrap items-center mt-3 text-sm font-medium sm:mt-0">
+              <li>
+                <Link to="#" className="mr-4 hover:underline md:mr-6">
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link to="#" className="mr-4 hover:underline md:mr-6">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="#" className="mr-4 hover:underline md:mr-6">
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </footer>
+
         {/* End Footer */}
       </div>
     </div>

@@ -1,0 +1,35 @@
+.carousel-wrapper {
+    height: 100vh;
+    margin: auto;
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.6));
+}
+
+.carousel-control-next-icon {
+    visibility: hidden;
+}
+
+.carousel-control-prev-icon {
+    visibility: hidden;
+}
+
+.detailMovie {
+    position: absolute;
+    text-align: left;
+    left: -4rem;
+    bottom: 5rem;
+}
+
+.trailer {
+    border: 1px solid #f33f3f;
+    background-color: #f33f3f;
+    color: white;
+    border-radius: 50px;
+    padding: 12px;
+    transition: 0.3s;
+
+}
+
+.trailer:hover {
+    opacity: 1;
+    background-color: #FF9980;
+}

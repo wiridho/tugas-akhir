@@ -1,59 +1,43 @@
-import React, { useEffect } from "react";
+import React from "react";
 import LogoAmana from "../../assets/img/logo/LogoAmana2.svg";
-import Carousel from "../../components/Carousel/Carousel";
-import { Label, TextInput, Button } from "flowbite-react";
+import { Label, TextInput, Button, Avatar } from "flowbite-react";
 import { handleRegister } from "../../features/auth/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { toTitleCase } from "../../utils/Format";
-import BackgroundAuth from "../../assets/img/background/backgroundAuth2.svg";
+import Carousel from "../../components/Carousel/Carousel";
 
-const Register = () => {
+const Register4 = () => {
   const { roles } = useParams();
   console.log("roles", roles);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { messageError, hasError, isSuccessRegister, data } = useSelector(
-    (state) => state.auth
-  );
-
-  useEffect(() => {
-    if (isSuccessRegister) {
-      navigate("/verifyregister");
-    }
-  }, [isSuccessRegister, navigate]);
-
   const onSubmit = (data) => {
     data["roles"] = roles;
+    console.log("register", data);
     dispatch(handleRegister(data));
+    navigate("/verifyregister");
   };
-
   // calling useForm
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   return (
     <>
-      <div className="h-screen grid grid-cols-2 font-inter">
+      <div className="h-screen grid grid-cols-2">
         {/* Background */}
         <div className="bg-primary md:flex sm:block items-center">
-          <img
-            src={BackgroundAuth}
-            className="object-cover object-left h-screen w-full"
-            alt=""
-          />
           {/* <p className="text-white">AMANAH</p> */}
-          {/* <Carousel /> */}
+          <Carousel />
         </div>
 
         {/* Form */}
-        <div className=" flex flex-col  justify-around bg-slate-100 ">
+        <div className=" flex flex-col  justify-center bg-slate-100 ">
           <div className="max-w-[400px] w-full mx-auto pb-4 flex justify-center items-center">
             <img
               className="w-20 h-20 bg-primary p-2 rounded-full"
@@ -62,7 +46,7 @@ const Register = () => {
             />
           </div>
           <form
-            className="max-w-[400px] w-full mx-auto bg-gray-50 p-6 px-8 shadow rounded-2xl "
+            className="max-w-[400px] w-full mx-auto bg-gray-50 p-6 px-8 rounded-2xl "
             onSubmit={handleSubmit(onSubmit)}
           >
             <div>
@@ -70,7 +54,7 @@ const Register = () => {
                 Daftar sebagai {toTitleCase("roles")}
               </p>
             </div>
-            <div className="mb-3">
+            <div className="mb-4">
               <Label
                 className="block text-gray-700 text-sm font-medium pb-1"
                 htmlFor="email"
@@ -91,7 +75,7 @@ const Register = () => {
                 <p className="text-red text-xs">Invalid email address</p>
               )}
             </div>
-            <div className="mb-3">
+            <div className="mb-4">
               <Label
                 className="block text-gray-700 text-sm font-medium pb-1"
                 htmlFor="Name"
@@ -110,7 +94,7 @@ const Register = () => {
               )}
             </div>
 
-            <div className="mb-3">
+            <div className="mb-4">
               <Label
                 className="block text-gray-700 text-sm font-medium pb-1"
                 htmlFor="Password"
@@ -143,7 +127,7 @@ const Register = () => {
                 </p>
               )}
             </div>
-            <div className="mb-3">
+            <div className="mb-4">
               <Label
                 className="block text-gray-700 text-sm font-medium pb-1"
                 htmlFor="phone number"
@@ -161,11 +145,8 @@ const Register = () => {
                 <p className="text-red text-xs">This field is required</p>
               )}
             </div>
-            <div className="pt-2">
-              <Button
-                type="submit"
-                className="w-full bg-primary hover:bg-[#146C94] "
-              >
+            <div className="">
+              <Button type="submit" className="w-full bg-primary ">
                 Daftar
               </Button>
             </div>
@@ -175,26 +156,21 @@ const Register = () => {
                   Sudah punya akun?
                 </p>
                 <Link
-                  className="text-xs text-primary hover:text-[#146C94]"
+                  className="text-xs text-primary hover:text-blue-800"
                   to="/login"
                 >
                   Masuk
                 </Link>
               </div>
-              <p className="p-2 text-xs text-right text-grey hover:text-[#146C94]">
+              <p className="p-2 text-xs text-right text-grey hover:text-primary">
                 <Link to="/reset-password">Lupa Password?</Link>
               </p>
             </div>
           </form>
-          <div className="text-center text-sm text-[#959292] pt-7">
-            <p className="">
-              © AMANAH Fintech Syariah 2023. All Right Reserved
-            </p>
-          </div>
         </div>
       </div>
     </>
   );
 };
 
-export default Register;
+export default Register4;

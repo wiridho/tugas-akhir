@@ -1,37 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Background from "../../assets/background.png";
 import Card from "../../components/FormRegistration/Card";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { verifyRegisterOtp } from "../../features/auth/authSlice";
+import { Button, Label, TextInput } from "flowbite-react";
+import { useForm } from "react-hook-form";
+import OtpInput from "react-otp-input";
 
 const VerifyRegister = () => {
   const [otp, setOtp] = useState("");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onSubmit = (e) => {
-    try {
-      e.preventDefault();
-      dispatch(verifyRegisterOtp(otp));
+  const { data, isVerified } = useSelector((state) => state.auth);
+
+  const userId = data._id;
+  console.log(data._id);
+  console.log("isVerified", isVerified);
+
+  useEffect(() => {
+    if (isVerified) {
       navigate("/login");
-      localStorage.clear();
-    } catch (err) {
-      console.log(err);
     }
+  }, [navigate, isVerified]);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    dispatch(verifyRegisterOtp({ otp: otp, userId: data._id }));
+  };
+
+  const handleResend = () => {
+    console.log("button clicked");
   };
 
   return (
-    <div>
-      {/* Background */}
-      <div
-        className="fixed inset-0"
-        style={{ backgroundImage: `url(${Background})` }}
-      ></div>
-      <div>
-        <Card setOtp={setOtp} otp={otp} handleSubmit={onSubmit} />
+    <>
+      <div className="">
+        <div>
+          {/* Background */}
+          <div className="fixed inset-0 bg-primary"></div>
+          <div>
+            <Card
+              setOtp={setOtp}
+              otp={otp}
+              handleSubmit={onSubmit}
+              handleResend={handleResend}
+            />
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

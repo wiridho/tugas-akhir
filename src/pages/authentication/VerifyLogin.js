@@ -14,15 +14,23 @@ const VerifyLogin = () => {
   const navigate = useNavigate();
 
   const value = useSelector((state) => state.auth.value);
+  const { messageError, hasError, isSuccess } = useSelector(
+    (state) => state.auth
+  );
+
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     navigate("/homepage");
+  //   }
+  // }, [navigate, isSuccess]);
 
   const onSubmit = (e) => {
-    try {
-      e.preventDefault();
-      dispatch(verifyLoginOtp({ email: value.email, otp: otp }));
-      navigate("/homepage");
-    } catch (err) {
-      console.log(err);
-    }
+    e.preventDefault();
+    dispatch(verifyLoginOtp({ email: value.email, otp: otp }));
+  };
+
+  const handleResend = () => {
+    console.log("button clicked");
   };
 
   return (
@@ -34,7 +42,12 @@ const VerifyLogin = () => {
           style={{ backgroundImage: `url(${Background})` }}
         ></div>
         <div>
-          <Card setOtp={setOtp} otp={otp} handleSubmit={onSubmit} />
+          <Card
+            setOtp={setOtp}
+            otp={otp}
+            handleSubmit={onSubmit}
+            handleResend={handleResend}
+          />
         </div>
       </div>
     </div>
