@@ -23,9 +23,9 @@ export const handleRegister = createAsyncThunk(
         `${apiConfig.baseUrl}/authentication/register`,
         params
       );
-      if (response.status === 409) {
-        console.log("message", response.data.message);
-      }
+      // if (response.status === 409) {
+      //   console.log("message", response.data.message);
+      // }
       // if (!response.ok) {
       //   // const error = await response;
       //   return;
@@ -33,12 +33,16 @@ export const handleRegister = createAsyncThunk(
       // console.log("response ", response);
       return response.data.data;
     } catch (err) {
-      if (err) {
-        // const error = {
-        //   message: err.response.data.message,
-        //   statusCode: err.response.status,
-        // };
-        return rejectWithValue(err);
+      const status = err.response?.status;
+      console.log("status", status);
+      const errorMessage = err.response?.data?.message;
+      console.log("message", errorMessage);
+      if (status === 409) {
+        // Handle specific status code and return an appropriate message value
+        return rejectWithValue({ status, message: errorMessage });
+      } else {
+        // Reject with the generic error value
+        return rejectWithValue(errorMessage);
       }
     }
   }
@@ -188,11 +192,11 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.hasError = false;
     },
-    [handleRegister.rejected]: (state, { payload }) => {
-      // console.log("payload", payload);
+    [handleRegister.rejected]: (state, action) => {
+      console.log("action", action);
       state.isLoading = false;
       state.hasError = true;
-      state.messageError = payload;
+      // state.messageError = ac;
     },
 
     // Verify Register OTP

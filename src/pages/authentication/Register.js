@@ -26,12 +26,8 @@ const Register = () => {
   }, [isSuccessRegister, navigate]);
 
   const onSubmit = (data) => {
-    try {
-      data["roles"] = roles;
-      dispatch(handleRegister(data));
-    } catch (err) {
-      console.error("masuk error");
-    }
+    data["roles"] = roles;
+    dispatch(handleRegister(data));
   };
 
   // calling useForm
