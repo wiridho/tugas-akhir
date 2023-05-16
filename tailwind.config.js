@@ -16,7 +16,6 @@ module.exports = {
         red: "#ff3333",
       },
       fontFamily: {
-        // sans: ["'Proxima nova',sans-serif"],
         inter: ["Inter", "sans-serif"],
       },
     },

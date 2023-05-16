@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Card from "../../components/FormRegistration/Card";
-import Background from "../../assets/background.png";
+// import Background from "../../assets/background.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 // function slice
@@ -37,10 +37,10 @@ const VerifyLogin = () => {
     <div className="">
       <div>
         {/* Background */}
-        <div
+        {/* <div
           className="fixed inset-0"
           style={{ backgroundImage: `url(${Background})` }}
-        ></div>
+        ></div> */}
         <div>
           <Card
             setOtp={setOtp}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Background from "../../assets/background.png";
+// import Background from "../../assets/background.png";
 import Card from "../../components/FormRegistration/Card";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +8,7 @@ import { Button, Label, TextInput } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import OtpInput from "react-otp-input";
 
-const VerifyRegister = () => {
+const RegisterVerifySucess = () => {
   const [otp, setOtp] = useState("");
 
   const dispatch = useDispatch();
@@ -20,16 +20,16 @@ const VerifyRegister = () => {
   console.log(data._id);
   console.log("isVerified", isVerified);
 
-  useEffect(() => {
-    if (isVerified) {
-      navigate("/login");
-    }
-  }, [navigate, isVerified]);
+  // useEffect(() => {
+  //   if (isVerified) {
+  //     navigate("/login");
+  //   }
+  // }, [navigate, isVerified]);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    dispatch(verifyRegisterOtp({ otp: otp, userId: data._id }));
-  };
+  // const onSubmit = (e) => {
+  //   e.preventDefault();
+  //   dispatch(verifyRegisterOtp({ otp: otp, userId: data._id }));
+  // };
 
   const handleResend = () => {
     console.log("button clicked");
@@ -40,14 +40,17 @@ const VerifyRegister = () => {
       <div className="">
         <div>
           {/* Background */}
-          <div className="fixed inset-0 bg-primary"></div>
+          {/* <div className="fixed inset-0 bg-primary"></div> */}
           <div>
-            <Card
+            <div className="bg-black">
+              <p className="text-white">register success</p>
+            </div>
+            {/* <Card
               setOtp={setOtp}
               otp={otp}
               handleSubmit={onSubmit}
               handleResend={handleResend}
-            />
+            /> */}
           </div>
         </div>
       </div>
@@ -55,4 +58,4 @@ const VerifyRegister = () => {
   );
 };
 
-export default VerifyRegister;
+export default RegisterVerifySucess;

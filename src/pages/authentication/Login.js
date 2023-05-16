@@ -57,20 +57,23 @@ const Login2 = () => {
   return (
     <>
       <div className="h-screen grid grid-cols-1 sm:grid-cols-2 font-inter">
+        {/* Left Wrapper */}
         <div className="hidden bg-primary md:flex sm:block items-center">
-          {/* <p className="text-white">AMANAH</p> */}
           <Carousel />
         </div>
-        {/* Form */}
-        <div className="flex flex-col  justify-center bg-slate-100">
-          <div className="max-w-[400px] w-full mx-auto pb-4 flex justify-center items-center">
+        {/* Right Wrapper */}
+        <div className="flex flex-col  justify-between p-2 bg-slate-100">
+          {/* Logo  */}
+          <div className="max-w-[400px] w-full mx-auto pt-6 flex justify-center items-center">
             <img
-              className="w-20 h-20 bg-primary p-2 rounded-full"
+              className="w-20 h-20 bg-primary p-2 rounded-full flex justify-center items-end"
               src={LogoAmana}
               alt="Rounded avatar"
             />
           </div>
-          <div className="max-w-[400px] w-full mx-auto bg-gray-50 p-6 px-8 shadow rounded-2xl ">
+
+          {/* Form */}
+          <div className="max-w-[400px] w-full mx-auto bg-gray-50 p-6 px-8 shadow rounded-2xl">
             <form className="" onSubmit={handleSubmit(onSubmit)}>
               <div>
                 <h1 className="text-xl">Masuk</h1>
@@ -148,6 +151,11 @@ const Login2 = () => {
                 </p>
               </div>
             </form>
+          </div>
+          <div className="text-center text-sm text-[#959292] pb-2">
+            <p className="">
+              © AMANAH Fintech Syariah 2023. All Right Reserved
+            </p>
           </div>
         </div>
       </div>

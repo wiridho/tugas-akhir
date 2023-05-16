@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import apiConfig from '../../api/apiConfig';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import apiConfig from "../../api/apiConfig";
 
 const initialState = {
   isSuccess: false,
@@ -17,13 +17,41 @@ const initialState = {
 // Handle Register
 export const handleRegister = createAsyncThunk(
   "auth/register",
-  async (params) => {
+  async (params, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `${apiConfig.baseUrl}/authentication/register`,
         params
       );
-      console.log("response register", response);
+      if (response.status === 409) {
+        console.log("message", response.data.message);
+      }
+      // if (!response.ok) {
+      //   // const error = await response;
+      //   return;
+      // }
+      // console.log("response ", response);
+      return response.data.data;
+    } catch (err) {
+      if (err) {
+        // const error = {
+        //   message: err.response.data.message,
+        //   statusCode: err.response.status,
+        // };
+        return rejectWithValue(err);
+      }
+    }
+  }
+);
+
+export const verifyEmailAccount = createAsyncThunk(
+  "auth/verify/email",
+  async (params) => {
+    try {
+      const response = await axios.post(
+        `${apiConfig.baseUrl}/authentication/verification/email/${params.userId}/${params.token}`
+      );
+      console.log("response verify", response);
       return response.data.data;
     } catch (error) {
       console.error(error);
@@ -34,7 +62,7 @@ export const handleRegister = createAsyncThunk(
 // Handle Register OTP
 export const verifyRegisterOtp = createAsyncThunk(
   "auth/verify",
-  async (params) => {
+  async (params, thunkApi) => {
     try {
       console.log("params", params);
       const response = await axios.post(
@@ -43,7 +71,10 @@ export const verifyRegisterOtp = createAsyncThunk(
       );
       console.log("response verify register", response);
     } catch (err) {
-      console.log(err);
+      if (err) {
+        const message = err.response.data.message;
+        return thunkApi.rejectWithValue(message);
+      }
     }
   }
 );
@@ -87,32 +118,32 @@ export const handleLogin = createAsyncThunk(
 
 // Handle Login OTP
 export const verifyLoginOtp = createAsyncThunk(
-    'auth/verifyLoginOtp',
-    async (params) => {
-        try {
-            console.log('params', params);
-            const response = await axios.post(
-                `${apiConfig.baseUrl}/authentication/login?action=login`,
-                params,
-            );
+  "auth/verifyLoginOtp",
+  async (params) => {
+    try {
+      console.log("params", params);
+      const response = await axios.post(
+        `${apiConfig.baseUrl}/authentication/login?action=login`,
+        params
+      );
 
-            localStorage.setItem('token', JSON.stringify(response.data.data));
-            return response?.data.data;
-            // let accessTokens = response.data.data.accessToken;
-            // let refreshTokens = response.data.data.refreshToken;
-            // const accessToken = localStorage.setItem(
-            //   "accessToken",
-            //   JSON.stringify(accessTokens)
-            // );
-            // const refreshToken = localStorage.setItem(
-            //   "accessToken",
-            //   JSON.stringify(refreshTokens)
-            // );
-            // return response.data.data;
-        } catch (err) {
-            console.log(err);
-        }
-    },
+      localStorage.setItem("token", JSON.stringify(response.data.data));
+      return response?.data.data;
+      // let accessTokens = response.data.data.accessToken;
+      // let refreshTokens = response.data.data.refreshToken;
+      // const accessToken = localStorage.setItem(
+      //   "accessToken",
+      //   JSON.stringify(accessTokens)
+      // );
+      // const refreshToken = localStorage.setItem(
+      //   "accessToken",
+      //   JSON.stringify(refreshTokens)
+      // );
+      // return response.data.data;
+    } catch (err) {
+      console.log(err);
+    }
+  }
 );
 
 // Handle Resend Login OTP
@@ -150,35 +181,19 @@ export const authSlice = createSlice({
   extraReducers: {
     // Register
     [handleRegister.pending]: (state) => {
-      state.isSuccessRegister = false;
       state.isLoading = true;
       state.hasError = false;
     },
     [handleRegister.fulfilled]: (state, { payload }) => {
-      state.isSuccessRegister = true;
       state.isLoading = false;
       state.hasError = false;
-      state.data = payload;
     },
-    [handleRegister.rejected]: (state) => {
-      state.isSuccessRegister = false;
+    [handleRegister.rejected]: (state, { payload }) => {
+      // console.log("payload", payload);
       state.isLoading = false;
       state.hasError = true;
+      state.messageError = payload;
     },
-    extraReducers: {
-        // Register
-        [handleRegister.pending]: (state) => {
-            state.isLoading = true;
-            state.hasError = false;
-        },
-        [handleRegister.fulfilled]: (state, { payload }) => {
-            state.isLoading = false;
-            state.hasError = false;
-        },
-        [handleRegister.rejected]: (state) => {
-            state.isLoading = false;
-            state.hasError = true;
-        },
 
     // Verify Register OTP
     [verifyRegisterOtp.pending]: (state) => {

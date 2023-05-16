@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import LogoAmana from "../../assets/img/logo/LogoAmana2.svg";
-import Carousel from "../../components/Carousel/Carousel";
 import { Label, TextInput, Button } from "flowbite-react";
 import { handleRegister } from "../../features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { toTitleCase } from "../../utils/Format";
-import BackgroundAuth from "../../assets/img/background/backgroundAuth2.svg";
+import BackgroundAuth from "../../assets/img/background/login.svg";
 
 const Register = () => {
   const { roles } = useParams();
@@ -22,13 +21,17 @@ const Register = () => {
 
   useEffect(() => {
     if (isSuccessRegister) {
-      navigate("/verifyregister");
+      navigate("/register/success");
     }
   }, [isSuccessRegister, navigate]);
 
   const onSubmit = (data) => {
-    data["roles"] = roles;
-    dispatch(handleRegister(data));
+    try {
+      data["roles"] = roles;
+      dispatch(handleRegister(data));
+    } catch (err) {
+      console.error("masuk error");
+    }
   };
 
   // calling useForm
@@ -40,21 +43,38 @@ const Register = () => {
 
   return (
     <>
-      <div className="h-screen grid grid-cols-2 font-inter">
+      {/* {messageError ? (
+        400 <= messageError.statusCode <= 499 ? (
+          // true
+          <div>{messageError.message}</div>
+        ) : // false
+        messageError.statusCode === 500 ? (
+          <div>
+            {" "}
+            <p>
+              Saat ini server sedang maintenance, coba lagi dalam beberapa saat
+            </p>
+          </div>
+        ) : (
+          ""
+        )
+      ) : (
+        ""
+      )} */}
+
+      {/* {messageError ? messageError.message : ""} */}
+
+      <div className="h-screen grid grid-cols-1 sm:grid-cols-2 font-inter">
         {/* Background */}
-        <div className="bg-primary md:flex sm:block items-center">
-          <img
-            src={BackgroundAuth}
-            className="object-cover object-left h-screen w-full"
-            alt=""
-          />
-          {/* <p className="text-white">AMANAH</p> */}
-          {/* <Carousel /> */}
+        <div className="bg-primary justify-center items-center hidden  md:flex">
+          <div className="flex sm:w-2/3  items-center  justify-center">
+            <img src={BackgroundAuth} className="" alt="" />
+          </div>
         </div>
 
         {/* Form */}
         <div className=" flex flex-col  justify-around bg-slate-100 ">
-          <div className="max-w-[400px] w-full mx-auto pb-4 flex justify-center items-center">
+          <div className="max-w-[400px] w-full mx-auto sm:pb-4 pt-3 flex justify-center items-center">
             <img
               className="w-20 h-20 bg-primary p-2 rounded-full"
               src={LogoAmana}
