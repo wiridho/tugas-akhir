@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Card from "../../components/FormRegistration/Card";
-// import Background from "../../assets/background.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
 // function slice
-import { verifyLoginOtp } from "../../features/auth/authSlice";
+import { resendLoginOtp, verifyLoginOtp } from "../../features/auth/authSlice";
 
 const VerifyLogin = () => {
   const [otp, setOtp] = useState("");
@@ -13,42 +13,35 @@ const VerifyLogin = () => {
   //navigate
   const navigate = useNavigate();
 
-  const value = useSelector((state) => state.auth.value);
-  const { messageError, hasError, isSuccess } = useSelector(
-    (state) => state.auth
-  );
+  const data = useSelector((state) => state.auth.data);
+  const { messageError, isSuccess } = useSelector((state) => state.auth);
 
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     navigate("/homepage");
-  //   }
-  // }, [navigate, isSuccess]);
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/");
+    }
+  }, [navigate, isSuccess]);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(verifyLoginOtp({ email: value.email, otp: otp }));
+    dispatch(verifyLoginOtp({ email: data.email, otp: otp }));
   };
+  console.log("data", data);
 
   const handleResend = () => {
-    console.log("button clicked");
+    console.log("button resend click");
+    dispatch(resendLoginOtp({ email: data.email }));
   };
 
   return (
     <div className="">
       <div>
-        {/* Background */}
-        {/* <div
-          className="fixed inset-0"
-          style={{ backgroundImage: `url(${Background})` }}
-        ></div> */}
-        <div>
-          <Card
-            setOtp={setOtp}
-            otp={otp}
-            handleSubmit={onSubmit}
-            handleResend={handleResend}
-          />
-        </div>
+        <Card
+          setOtp={setOtp}
+          otp={otp}
+          handleSubmit={onSubmit}
+          handleResend={handleResend}
+        />
       </div>
     </div>
   );

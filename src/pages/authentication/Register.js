@@ -11,11 +11,10 @@ import BackgroundAuth from "../../assets/img/background/login.svg";
 
 const Register = () => {
   const { roles } = useParams();
-  console.log("roles", roles);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { messageError, hasError, isSuccessRegister, data } = useSelector(
+  const { messageError, hasError, isSuccessRegister } = useSelector(
     (state) => state.auth
   );
 
@@ -39,27 +38,6 @@ const Register = () => {
 
   return (
     <>
-      {/* {messageError ? (
-        400 <= messageError.statusCode <= 499 ? (
-          // true
-          <div>{messageError.message}</div>
-        ) : // false
-        messageError.statusCode === 500 ? (
-          <div>
-            {" "}
-            <p>
-              Saat ini server sedang maintenance, coba lagi dalam beberapa saat
-            </p>
-          </div>
-        ) : (
-          ""
-        )
-      ) : (
-        ""
-      )} */}
-
-      {/* {messageError ? messageError.message : ""} */}
-
       <div className="h-screen grid grid-cols-1 sm:grid-cols-2 font-inter">
         {/* Background */}
         <div className="bg-primary justify-center items-center hidden  md:flex">
@@ -83,7 +61,7 @@ const Register = () => {
           >
             <div>
               <p className="font-sans text-2xl font-medium pb-3 text-slate-900 ">
-                Daftar sebagai {toTitleCase("roles")}
+                Daftar sebagai {toTitleCase(roles)}
               </p>
             </div>
             <div className="mb-3">

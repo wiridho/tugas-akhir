@@ -105,7 +105,6 @@ const Card = ({ setOtp, otp, handleSubmit, handleResend }) => {
                     inputStyle={
                       "!w-[50px] h-[50px] rounded-md border-none bg-primary"
                     }
-                    // shouldAutoFocus:true
                     value={otp}
                     onChange={setOtp}
                     numInputs={5}

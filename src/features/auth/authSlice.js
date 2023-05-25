@@ -1,17 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import apiConfig from "../../api/apiConfig";
+import Swal from "sweetalert2";
 
 const initialState = {
   isSuccess: false,
   isSuccessRegister: false,
   isLoading: false,
-  hasError: false,
-  isVerified: false,
+  isError: false,
   data: [],
-  value: [],
   token: [],
   messageError: null,
+  // buat private route
+  isAuthenticated: true,
 };
 
 // Handle Register
@@ -23,31 +24,55 @@ export const handleRegister = createAsyncThunk(
         `${apiConfig.baseUrl}/authentication/register`,
         params
       );
-      // if (response.status === 409) {
-      //   console.log("message", response.data.message);
-      // }
-      // if (!response.ok) {
-      //   // const error = await response;
-      //   return;
-      // }
-      // console.log("response ", response);
+      console.log("response register", response.data.data);
       return response.data.data;
     } catch (err) {
       const status = err.response?.status;
-      console.log("status", status);
       const errorMessage = err.response?.data?.message;
+      console.log("status", status);
       console.log("message", errorMessage);
+
+      // 409 = Duplicate Email
       if (status === 409) {
+        Swal.fire({
+          title: "Error!",
+          text: errorMessage,
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
         // Handle specific status code and return an appropriate message value
         return rejectWithValue({ status, message: errorMessage });
       } else {
+        Swal.fire({
+          title: "Error!",
+          text: errorMessage,
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
         // Reject with the generic error value
-        return rejectWithValue(errorMessage);
+        return rejectWithValue({ status, message: errorMessage });
       }
     }
   }
 );
 
+// Handle Resend Verify Email
+export const resendRegisterVerify = createAsyncThunk(
+  "auth/resend",
+  async (userId) => {
+    try {
+      const response = await axios.post(
+        `${apiConfig.baseUrl}/authentication/verification/email/${userId}/resend`,
+        { userId }
+      );
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
+//Handle Verify Email Account
 export const verifyEmailAccount = createAsyncThunk(
   "auth/verify/email",
   async (params) => {
@@ -63,47 +88,11 @@ export const verifyEmailAccount = createAsyncThunk(
   }
 );
 
-// Handle Register OTP
-export const verifyRegisterOtp = createAsyncThunk(
-  "auth/verify",
-  async (params, thunkApi) => {
-    try {
-      console.log("params", params);
-      const response = await axios.post(
-        `${apiConfig.baseUrl}/authentication/otp/email/verify`,
-        params
-      );
-      console.log("response verify register", response);
-    } catch (err) {
-      if (err) {
-        const message = err.response.data.message;
-        return thunkApi.rejectWithValue(message);
-      }
-    }
-  }
-);
-
-// Handle Resend Register OTP
-export const resendRegisterOtp = createAsyncThunk("auth/resend", async () => {
-  try {
-    const userId = JSON.parse(localStorage.getItem("userId"));
-    console.log();
-    const response = await axios.post(
-      `${apiConfig.baseUrl}/authentication/register/otp/resend`,
-      { userId: userId }
-    );
-    console.log(response);
-  } catch (err) {
-    console.log(err);
-  }
-});
-
 // Handle Login
 export const handleLogin = createAsyncThunk(
   "auth/login",
   async (params, thunkApi) => {
     try {
-      console.log(params);
       const response = await axios.post(
         `${apiConfig.baseUrl}/authentication/login?action=email-otp`,
         params
@@ -112,7 +101,6 @@ export const handleLogin = createAsyncThunk(
       return response.data.data;
     } catch (err) {
       if (err) {
-        // console.log(err.response);
         const message = err.response.data.message;
         return thunkApi.rejectWithValue(message);
       }
@@ -125,14 +113,12 @@ export const verifyLoginOtp = createAsyncThunk(
   "auth/verifyLoginOtp",
   async (params) => {
     try {
-      console.log("params", params);
       const response = await axios.post(
         `${apiConfig.baseUrl}/authentication/login?action=login`,
         params
       );
-
-      localStorage.setItem("token", JSON.stringify(response.data.data));
       return response?.data.data;
+      // localStorage.setItem("token", JSON.stringify(response.data.data));
       // let accessTokens = response.data.data.accessToken;
       // let refreshTokens = response.data.data.refreshToken;
       // const accessToken = localStorage.setItem(
@@ -153,15 +139,14 @@ export const verifyLoginOtp = createAsyncThunk(
 // Handle Resend Login OTP
 export const resendLoginOtp = createAsyncThunk(
   "auth/resend/login",
-  async () => {
+  async (params) => {
     try {
-      const userId = JSON.parse(localStorage.getItem("userId"));
-      console.log();
+      console.log("params", params);
       const response = await axios.post(
         `${apiConfig.baseUrl}/authentication/login/otp/resend`,
-        { userId: userId }
+        params
       );
-      console.log(response);
+      console.log("response resend otp", response);
     } catch (err) {
       console.log(err);
     }
@@ -171,89 +156,84 @@ export const resendLoginOtp = createAsyncThunk(
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    setCredentials: (state, action) => {
-      const { email, token } = action.payload;
-      state.email = email;
-      state.token = token;
-    },
-    logOut: (state) => {
-      state.value = [];
-      state.token = [];
-    },
-  },
-  extraReducers: {
-    // Register
-    [handleRegister.pending]: (state) => {
-      state.isLoading = true;
-      state.hasError = false;
-    },
-    [handleRegister.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      state.hasError = false;
-    },
-    [handleRegister.rejected]: (state, action) => {
-      console.log("action", action);
-      state.isLoading = false;
-      state.hasError = true;
-      // state.messageError = ac;
-    },
-
-    // Verify Register OTP
-    [verifyRegisterOtp.pending]: (state) => {
-      state.isVerified = false;
-      state.isLoading = true;
-      state.hasError = false;
-    },
-    [verifyRegisterOtp.fulfilled]: (state) => {
-      state.isVerified = true;
-      state.isLoading = false;
-      state.hasError = false;
-    },
-    [verifyRegisterOtp.rejected]: (state) => {
-      state.isVerified = false;
-      state.isLoading = false;
-      state.hasError = true;
-    },
-
-    // Login
-    [handleLogin.pending]: (state) => {
-      state.isSuccess = false;
-      state.isLoading = true;
-      state.hasError = false;
-    },
-    [handleLogin.fulfilled]: (state, { payload }) => {
-      state.isSuccess = true;
-      state.isLoading = false;
-      state.hasError = false;
-      state.value = payload;
-    },
-    [handleLogin.rejected]: (state, action) => {
-      state.isSuccess = false;
-      state.isLoading = false;
-      state.hasError = true;
-      state.messageError = action.payload;
-    },
-
-    //Verify Login OTP
-    [verifyLoginOtp.pending]: (state) => {
-      state.isLoading = true;
-      state.hasError = false;
-      state.isSuccess = false;
-    },
-    [verifyLoginOtp.fulfilled]: (state, { payload }) => {
-      state.isSuccess = true;
-      state.isLoading = false;
-      state.hasError = false;
-      state.token = payload;
-    },
-    [verifyLoginOtp.rejected]: (state) => {
-      state.isSuccess = false;
-      state.isLoading = false;
-      state.hasError = true;
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      // Handle Register
+      .addCase(handleRegister.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccessRegister = false;
+      })
+      .addCase(handleRegister.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccessRegister = true;
+        state.data = action.payload;
+      })
+      .addCase(handleRegister.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccessRegister = false;
+        state.messageError = action.payload;
+      })
+      // Resend Verify Link Register
+      .addCase(resendRegisterVerify.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+      })
+      .addCase(resendRegisterVerify.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isError = false;
+      })
+      .addCase(resendRegisterVerify.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+      })
+      // Handle Login
+      .addCase(handleLogin.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+      })
+      .addCase(handleLogin.fulfilled, (state, action) => {
+        state.isSuccess = true;
+        state.isLoading = false;
+        state.isError = false;
+        state.data = action.payload;
+      })
+      .addCase(handleLogin.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+      })
+      // Handle Verify Login OTP
+      .addCase(verifyLoginOtp.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+      })
+      .addCase(verifyLoginOtp.fulfilled, (state, action) => {
+        state.isSuccess = true;
+        state.isLoading = false;
+        state.isError = false;
+        state.token = action.payload;
+      })
+      .addCase(verifyLoginOtp.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+      })
+      // Resend OTP
+      .addCase(resendLoginOtp.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+      })
+      .addCase(resendLoginOtp.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isError = false;
+      })
+      .addCase(resendLoginOtp.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+      });
   },
 });
 
-export const { setCredentials, logOut } = authSlice.actions;
 export default authSlice.reducer;

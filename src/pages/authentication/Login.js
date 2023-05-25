@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { Button, Label, TextInput } from "flowbite-react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
-const Login2 = () => {
+const Login = () => {
   //dispatch
   const dispatch = useDispatch();
   //navigate
@@ -27,9 +27,7 @@ const Login2 = () => {
   };
 
   // Access state form store
-  const { messageError, hasError, isSuccess } = useSelector(
-    (state) => state.auth
-  );
+  const { isSuccess } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isSuccess) {
@@ -43,6 +41,7 @@ const Login2 = () => {
     function togglePasswordVisibility() {
       setIsPasswordVisible(true);
     }
+
     return (
       <div onClick={() => togglePasswordVisibility()}>
         {isPasswordVisible ? (
@@ -59,7 +58,7 @@ const Login2 = () => {
       <div className="h-screen grid grid-cols-1 sm:grid-cols-2 font-inter">
         {/* Left Wrapper */}
         <div className="hidden bg-primary md:flex sm:block items-center">
-          <Carousel />
+          {/* <Carousel /> */}
         </div>
         {/* Right Wrapper */}
         <div className="flex flex-col  justify-between p-2 bg-slate-100">
@@ -163,4 +162,4 @@ const Login2 = () => {
   );
 };
 
-export default Login2;
+export default Login;
